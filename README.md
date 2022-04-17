@@ -1,59 +1,68 @@
-# Memtest86+ bootable USB creator
+# Memtest86+ Bootable USB Creator
 
-    - **Making Memtest86+ bootable USB drive in Linux manually**
-        1. Open GParted
-            1. select USB device from drop down menu in the top right corner - refresh with Ctrl + R if not listed
-            1. Device - Create Partition Table - msdos
-            1. Partition - New - fat32
-            1. Right click on partition - Manage flags - check 'boot' and 'lba'
-        1. Open Terminal
-            1. Download the `Auto-installer for USB Key (Win 7/8/10)` for the latest version of Memtest86+ from http://www.memtest.org/#downiso
-            1. Extract the downloaded `exe` file
+## Usage
 
-                      cd "${HOME}/Downloads/"
-                      sudo 7z x "Memtest86+ USB Installer.exe" -oMemtest86Plus_USB_Installer
-                      sudo chown --recursive laptop:users Memtest86Plus_USB_Installer/
-            
-            1. Copy Memtest86+ files to the fat32 partition on the USB drive
+    ./make_memtest86plus_usb.sh sdb
 
-                      cd "${HOME}/Downloads/Memtest86Plus_USB_Installer/$PLUGINSDIR/"
-                      # Necessary files
-                      cp mt86plus /run/media/laptop/D540-1210
-                      cp syslinux.cfg /run/media/laptop/D540-1210
+where `sdb` is the USB disk device name from output of the command `lsblk`
 
-                      # Optional files
-                      cp Copying /run/media/laptop/D540-1210
-                      cp Readme.txt /run/media/laptop/D540-1210
+## Dependencies
 
-            1. Download and extract `syslinux` package
+- `python3` - for the extraction script for the URL
+    - `python-beautifulsoup` - for parsing the website
+    - `python-requests` - for accessing the website
+- `parted` - for partitioning the drive
+- `dosfstools` - for setting the partition label
 
-                      sudo pacman --sync --downloadonly --noconfirm --cachedir "${HOME}/Downloads/" syslinux
-                      syslinux_package="$(find "${HOME}/Downloads/" -maxdepth 1 -name "syslinux*" | sort | head --lines=1)"
+## Alternative method - Windows & Linux CO-OP
 
-                      cd "${HOME}/Downloads/"
-                      sudo rm "${HOME}/Downloads/${syslinux_package}.sig"
-                      sudo 7z x "${HOME}/Downloads/${syslinux_package}"
-                      
-                      syslinux_inner_package_extraction_dir="$(echo ${syslinux_package%.*} | rev | cut --delimiter='.' --fields=1,2 --complement | rev)"
-                      
-                      cd "${HOME}/Downloads/"
-                      sudo 7z x "${HOME}/Downloads/${syslinux_package%.*} -o${syslinux_inner_package_extraction_dir}
-                      sudo chown laptop:users ${syslinux_inner_package_extraction_dir}
+For the USB drive, create 'msdos' partition table with one 33MiB FAT32 partition
 
-            1. Install `syslinux` on the fat32 partition on the USB drive
-            
-                      sudo "${HOME}/Downloads/${syslinux_inner_package_extraction_dir}/usr/bin/syslinux" --install /dev/sdb1
+Create the Memtest86Plus USB with the USB installer in Windows
 
-                where `/dev/sdb1` is the name of the fat32 partition on the USB drive.
-  
-            1. Flash bootable MBR onto the USB drive
+In Linux terminal create an ISO file from the created Memtest USB
 
-                      sudo dd bs=440 count=1 conv=notrunc if="${HOME}/Downloads/syslinux-6.04.pre2.r11.gbf6db5b4-3-x86_64/usr/lib/syslinux/bios/mbr.bin" of=/dev/sdb
+        sudo dd if=/dev/sdb1 of=/home/laptop/Downloads/VM_Share-ISOs_and_guides/memtest86+-5.31b.usb.installer.iso
 
-                where `/dev/sdb` is the name of the USB drive.
+Now you have the Memtest86Plus ISO file at hand. To flash it back, execute
 
-        1. Unmount the drive
+        sudo dd if=/home/laptop/Downloads/VM_Share-ISOs_and_guides/memtest86+-5.31b.usb.installer.iso of=/dev/sdb
 
-                    sudo umount /dev/sdb1
+Reboot the machine to test it out.
 
-        1. Test the USB drive by booting from it on the current system, on another computer or in a virtual machine.
+## Sources
+
+- Memtest86+
+    - http://www.memtest.org/
+
+- Syslinux
+    - https://duckduckgo.com/?q=linux+create+syslinux+usb&ia=web
+    - https://wiki.syslinux.org/wiki/index.php?title=Install
+    - https://duckduckgo.com/?q=linux+syslinux+install+generic+mbr+boot+code&ia=web
+    - https://wiki.syslinux.org/wiki/index.php?title=Mbr
+        - **the missing piece of knowledge to understand how the USB makes bootable in MBR environment**
+
+- Python - web scraping
+    - https://duckduckgo.com/?q=python+web+scraping&ia=web
+    - https://oxylabs.io/blog/python-web-scraping
+    - https://archlinux.org/packages/community/any/python-beautifulsoup4/
+    - https://duckduckgo.com/?q=soup+select&ia=web
+    - https://www.crummy.com/software/BeautifulSoup/bs4/doc/#navigating-using-tag-names
+    - https://www.skytowner.com/explore/finding_elements_that_contain_a_specific_text_in_beautiful_soup
+    - https://duckduckgo.com/?q=beautifulsoup+extract+all+href+links&ia=web
+    - https://www.tutorialspoint.com/how-can-beautifulsoup-be-used-to-extract-href-links-from-a-website
+    - https://duckduckgo.com/?q=beuautifulsoup+find+all+links+containing+text&ia=web&iax=qa
+
+- Python - general
+    - https://www.pythonpool.com/empty-string-python/
+    - https://duckduckgo.com/?q=python+regex+replace+string+pattern&ia=web
+    - https://www.educba.com/python-regex-replace/
+
+- vim
+    - https://duckduckgo.com/?q=vim+substitute+case+sensitive&ia=web
+    - https://stackoverflow.com/questions/2287440/how-to-do-case-insensitive-search-in-vim#2287449
+
+- alternative method
+    - https://duckduckgo.com/?q=linux+create+iso+from+usb&ia=web
+    - https://www.tecmint.com/create-an-iso-from-a-bootable-usb-in-linux/
+
