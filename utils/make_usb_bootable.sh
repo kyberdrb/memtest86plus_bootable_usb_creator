@@ -37,7 +37,7 @@ PARTITION_NAME=$(cat /proc/partitions | grep "${DISK_NAME}" | rev | cut -d' ' -f
 PARTITION_DEVICE="/dev/${PARTITION_NAME}"
 
 udisksctl unmount --block-device "${PARTITION_DEVICE}"
-udisksctl mount --block-device "${PARTITION_DEVICE}"
+#udisksctl mount --block-device "${PARTITION_DEVICE}"
 
 printf "%s\n" "Installing bootloader with 'syslinux'"
 chmod +x "/tmp/syslinux_inner_package/usr/bin/syslinux"
