@@ -6,6 +6,12 @@
 
 where `sdb` is the USB disk device name from output of the command `lsblk`
 
+## Estimated time to finish tests
+
+- Memtest86+ 2x4GB duration: approx 2 and half hours or more [one pass ~ 45-60 min] (SMT off)
+- Memtest86 2x4GB duration: approx 2 and half hours (SMT on)
+- Memtest86 2x8GB duration: approx 3 and half hours (SMT on)
+
 ## Dependencies
 
 - `python3` - for the extraction script for the URL
@@ -65,4 +71,13 @@ Reboot the machine to test it out.
 - alternative method
     - https://duckduckgo.com/?q=linux+create+iso+from+usb&ia=web
     - https://www.tecmint.com/create-an-iso-from-a-bootable-usb-in-linux/
+
+- Memtest86
+    - https://www.memtest86.com/
+    - https://duckduckgo.com/?q=memtest86+bootable+usb&ia=web
+    - https://duckduckgo.com/?q=memtest86%2B+arch+linux+systemd-boot&ia=web
+    - [Solved] systemd-boot and memtest86+: https://bbs.archlinux.org/viewtopic.php?id=205874
+    - https://aur.archlinux.org/packages/memtest86-efi
+    - https://github.com/jamesan-unofficial-aur-pkgs/memtest86-efi/blob/master/systemd-boot.conf
+    - 
 
