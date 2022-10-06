@@ -79,5 +79,8 @@ Reboot the machine to test it out.
     - [Solved] systemd-boot and memtest86+: https://bbs.archlinux.org/viewtopic.php?id=205874
     - https://aur.archlinux.org/packages/memtest86-efi
     - https://github.com/jamesan-unofficial-aur-pkgs/memtest86-efi/blob/master/systemd-boot.conf
-    - 
+- Shell scripting
+    - https://forums.linuxmint.com/viewtopic.php?p=1891954#p1891954
+    - https://duckduckgo.com/?q=bash+set+unset&ia=web
+    - https://towardsdev.com/what-does-set-u-mean-in-a-bash-script-52b048271741
 
